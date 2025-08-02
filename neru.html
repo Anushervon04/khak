@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="tg" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Неруи Сабз - Экологическая организация</title>
+    <meta name="description" content="Ташкилоти ғайридавлатии Неруи Сабз барои рушди нерӯҳои тоза ва технологияҳои экологиявӣ дар Тоҷикистон">
+    <meta name="copyright" content="Неруи Сабз">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2e7d32',
+                        primaryDark: '#1b5e20',
+                        primaryLight: '#4caf50',
+                        accent: '#8bc34a',
+                        accentDark: '#689f38',
+                        light: '#f5f5f6',
+                        text: '#263238',
+                        textLight: '#78909c',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        custom: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        [data-lang] { display: none; }
+        [data-lang="tg"] { display: block; }
+        
+        .language-selector {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .language-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+        
+        .language-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .language-options {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .language-options.show {
+            display: block;
+        }
+        
+        .language-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #8bc34a;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+        
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -13px;
+            background-color: white;
+            border: 4px solid #2e7d32;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid #f1f1f1;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+        
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid #f1f1f1;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-container::before {
+                left: 60px;
+                border: medium solid white;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent white transparent transparent;
+            }
+            
+            .left::after, .right::after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        /* Copy protection */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        img {
+            pointer-events: none;
+        }
+        
+        /* Print protection */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .no-print, .no-print * {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-text antialiased">
+    <!-- Language Selector -->
+    <div class="language-selector no-print">
+        <div class="language-btn" id="currentLang">TJ</div>
+        <div class="language-options" id="languageOptions">
+            <div class="language-option" data-lang-code="tg">Тоҷикӣ</div>
+            <div class="language-option" data-lang-code="ru">Русский</div>
+            <div class="language-option" data-lang-code="en">English</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="fixed w-full bg-white bg-opacity-95 shadow-md transition-all duration-400 z-50">
+        <div class="container mx-auto px-4">
+            <nav class="navbar flex justify-between items-center py-5">
+                <a href="#" class="logo flex items-center no-underline">
+                    <div class="logo-icon w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="logo-text font-serif text-primaryDark text-xl font-bold ml-3">
+                        <span data-lang="tg">Неруи Сабз</span>
+                        <span data-lang="ru">Зеленая Энергия</span>
+                        <span data-lang="en">Green Power</span>
+                        <span class="text-accent">+</span>
+                    </div>
+                </a>
+                
+                <ul class="nav-links hidden md:flex space-x-8">
+                    <li><a href="#home" class="active text-text font-medium relative transition-all duration-400" data-lang="tg">Асосӣ</a></li>
+                    <li><a href="#home" class="active text-text font-medium relative transition-all duration-400" data-lang="ru">Главная</a></li>
+                    <li><a href="#home" class="active text-text font-medium relative transition-all duration-400" data-lang="en">Home</a></li>
+                    
+                    <li><a href="#features" class="text-text font-medium relative transition-all duration-400" data-lang="tg">Фаолиятҳо</a></li>
+                    <li><a href="#features" class="text-text font-medium relative transition-all duration-400" data-lang="ru">Деятельность</a></li>
+                    <li><a href="#features" class="text-text font-medium relative transition-all duration-400" data-lang="en">Activities</a></li>
+                    
+                    <li><a href="#timeline" class="text-text font-medium relative transition-all duration-400" data-lang="tg">Рушд</a></li>
+                    <li><a href="#timeline" class="text-text font-medium relative transition-all duration-400" data-lang="ru">Развитие</a></li>
+                    <li><a href="#timeline" class="text-text font-medium relative transition-all duration-400" data-lang="en">Development</a></li>
+                    
+                    <li><a href="#projects" class="text-text font-medium relative transition-all duration-400" data-lang="tg">Лоиҳаҳо</a></li>
+                    <li><a href="#projects" class="text-text font-medium relative transition-all duration-400" data-lang="ru">Проекты</a></li>
+                    <li><a href="#projects" class="text-text font-medium relative transition-all duration-400" data-lang="en">Projects</a></li>
+                    
+                    <li><a href="#map" class="text-text font-medium relative transition-all duration-400" data-lang="tg">Карта</a></li>
+                    <li><a href="#map" class="text-text font-medium relative transition-all duration-400" data-lang="ru">Карта</a></li>
+                    <li><a href="#map" class="text-text font-medium relative transition-all duration-400" data-lang="en">Map</a></li>
+                    
+                    <li><a href="./contact.html" class="text-text font-medium relative transition-all duration-400" data-lang="tg">Тамос</a></li>
+                    <li><a href="./contact.html" class="text-text font-medium relative transition-all duration-400" data-lang="ru">Контакты</a></li>
+                    <li><a href="./contact.html" class="text-text font-medium relative transition-all duration-400" data-lang="en">Contact</a></li>
+                </ul>
+                
+                <div class="mobile-toggle md:hidden flex flex-col justify-between w-8 h-6 cursor-pointer">
+                    <span class="block h-1 w-full bg-primary rounded"></span>
+                    <span class="block h-1 w-full bg-primary rounded"></span>
+                    <span class="block h-1 w-full bg-primary rounded"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero h-screen min-h-[800px] flex items-center relative bg-gradient-to-r from-black/40 to-black/40 bg-cover bg-center" 
+             style="background-image: url('https://images.unsplash.com/photo-1487611459768-bd414656ea10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80')" 
+             id="home">
+        <div class="container mx-auto px-4 relative z-10 pt-20">
+            <div class="hero-content max-w-3xl">
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight" data-lang="tg">Неруи тоза барои ояндаи пойдор</h1>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight" data-lang="ru">Чистая энергия для устойчивого будущего</h1>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight" data-lang="en">Clean energy for sustainable future</h1>
+                
+                <p class="text-xl text-white mb-10 max-w-2xl" data-lang="tg">Мо барои таҳия ва татбиқи ҳалли нерӯи тоза дар Тоҷикистон кор мекунем. Ҳамроҳи мо шавед, то ки шароити зистро беҳтар созем.</p>
+                <p class="text-xl text-white mb-10 max-w-2xl" data-lang="ru">Мы работаем над разработкой и внедрением решений в области чистой энергии в Таджикистане. Присоединяйтесь к нам, чтобы сделать условия жизни лучше.</p>
+                <p class="text-xl text-white mb-10 max-w-2xl" data-lang="en">We work on developing and implementing clean energy solutions in Tajikistan. Join us to make living conditions better.</p>
+                
+                <div class="hero-buttons flex gap-5 mt-8">
+                    <a href="#projects" class="btn bg-gradient-to-r from-primary to-primaryDark text-white px-10 py-4 rounded-full font-semibold uppercase tracking-wider flex items-center gap-3 shadow-lg transition-all duration-400 hover:-translate-y-1 hover:shadow-xl">
+                        <span data-lang="tg">Лоиҳаҳои мо</span>
+                        <span data-lang="ru">Наши проекты</span>
+                        <span data-lang="en">Our projects</span>
+                    </a>
+                    <a href="#timeline" class="btn border-2 border-primary text-primary px-10 py-4 rounded-full font-semibold uppercase tracking-wider flex items-center gap-3 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Рушди мо</span>
+                        <span data-lang="ru">Наше развитие</span>
+                        <span data-lang="en">Our progress</span>
+                    </a>
+                </div>
+                
+                <div class="hero-stats flex flex-wrap gap-10 mt-16">
+                    <div class="stat-item text-center">
+                        <div class="stat-number text-3xl font-serif font-bold text-accent mb-3" data-count="15">0</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="tg">Лоиҳаҳои иҷрошуда</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="ru">Реализованных проектов</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="en">Completed projects</div>
+                    </div>
+                    <div class="stat-item text-center">
+                        <div class="stat-number text-3xl font-serif font-bold text-accent mb-3">45 <span class="text-xl">MW</span></div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="tg">Иқтидори умумии нерӯ</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="ru">Общая мощность</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="en">Total capacity</div>
+                    </div>
+                    <div class="stat-item text-center">
+                        <div class="stat-number text-3xl font-serif font-bold text-accent mb-3" data-count="5000">0</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="tg">Оилаҳои манфиатбар</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="ru">Пользующихся семей</div>
+                        <div class="stat-text text-white uppercase tracking-wider" data-lang="en">Beneficiary families</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white" id="features">
+        <div class="container mx-auto px-4">
+            <div class="section-title text-center mb-16 relative">
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Самтҳои фаъолияти мо</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Направления деятельности</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Our activities</h2>
+                <div class="divider w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded"></div>
+            </div>
+            
+            <div class="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card bg-white rounded-xl p-8 text-center shadow-lg border border-gray-100 transition-all duration-400 hover:-translate-y-3 hover:shadow-xl">
+                    <div class="feature-icon w-20 h-20 bg-gradient-to-r from-primaryLight to-accent rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6 transition-all duration-700 hover:rotate-y-180">
+                        <i class="fas fa-solar-panel"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Сохтмони системаҳои фотоэлектрикӣ</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Строительство фотоэлектрических систем</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Construction of photovoltaic systems</h3>
+                    <p class="text-textLight mb-6" data-lang="tg">Таҳия ва насби системаҳои нерӯи офтобӣ барои манзилҳо, корхонаҳо ва муассисаҳои давлатӣ</p>
+                    <p class="text-textLight mb-6" data-lang="ru">Разработка и установка солнечных энергосистем для домов, предприятий и государственных учреждений</p>
+                    <p class="text-textLight mb-6" data-lang="en">Development and installation of solar power systems for homes, businesses and government institutions</p>
+                    <a href="./oftob.html" class="btn border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold text-sm uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Маълумоти бештар</span>
+                        <span data-lang="ru">Подробнее</span>
+                        <span data-lang="en">Learn more</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-8 text-center shadow-lg border border-gray-100 transition-all duration-400 hover:-translate-y-3 hover:shadow-xl">
+                    <div class="feature-icon w-20 h-20 bg-gradient-to-r from-primaryLight to-accent rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6 transition-all duration-700 hover:rotate-y-180">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Истифодаи нерӯ аз биогаз</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Использование энергии биогаза</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Biogas energy utilization</h3>
+                    <p class="text-textLight mb-6" data-lang="tg">Таҳқиқот ва татбиқи технологияҳои нави истифодаи биогаз дар шароити кӯҳистони Тоҷикистон</p>
+                    <p class="text-textLight mb-6" data-lang="ru">Исследование и внедрение новых технологий использования биогаза в горных условиях Таджикистана</p>
+                    <p class="text-textLight mb-6" data-lang="en">Research and implementation of new biogas utilization technologies in mountainous conditions of Tajikistan</p>
+                    <a href="./neru.html" class="btn border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold text-sm uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Маълумоти бештар</span>
+                        <span data-lang="ru">Подробнее</span>
+                        <span data-lang="en">Learn more</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-8 text-center shadow-lg border border-gray-100 transition-all duration-400 hover:-translate-y-3 hover:shadow-xl">
+                    <div class="feature-icon w-20 h-20 bg-gradient-to-r from-primaryLight to-accent rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6 transition-all duration-700 hover:rotate-y-180">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Машварати самаранокӣ</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Консультации по эффективности</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Efficiency consulting</h3>
+                    <p class="text-textLight mb-6" data-lang="tg">Пешниҳоди ҳалли самарабахш барои коҳиш додани истифодаи нерӯ дар корхонаҳо ва манзилҳо</p>
+                    <p class="text-textLight mb-6" data-lang="ru">Предложение эффективных решений для снижения энергопотребления на предприятиях и в домах</p>
+                    <p class="text-textLight mb-6" data-lang="en">Offering efficient solutions to reduce energy consumption in businesses and homes</p>
+                    <a href="./seminar.html" class="btn border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold text-sm uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Маълумоти бештар</span>
+                        <span data-lang="ru">Подробнее</span>
+                        <span data-lang="en">Learn more</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="feature-card bg-white rounded-xl p-8 text-center shadow-lg border border-gray-100 transition-all duration-400 hover:-translate-y-3 hover:shadow-xl">
+                    <div class="feature-icon w-20 h-20 bg-gradient-to-r from-primaryLight to-accent rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6 transition-all duration-700 hover:rotate-y-180">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Дастаи Барномасозон</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Команда разработчиков</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Developer team</h3>
+                    <p class="text-textLight mb-6" data-lang="tg">Мо ҳалли инноватсионии диҷиталиро барои мушкилоти мураккаби иқтисодӣ ва иҷтимоӣ пешниҳод мекунем</p>
+                    <p class="text-textLight mb-6" data-lang="ru">Мы предлагаем инновационные цифровые решения для сложных экономических и социальных проблем</p>
+                    <p class="text-textLight mb-6" data-lang="en">We offer innovative digital solutions for complex economic and social problems</p>
+                    <a href="./programming.html" class="btn border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold text-sm uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Маълумоти бештар</span>
+                        <span data-lang="ru">Подробнее</span>
+                        <span data-lang="en">Learn more</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="feature-card bg-white rounded-xl p-8 text-center shadow-lg border border-gray-100 transition-all duration-400 hover:-translate-y-3 hover:shadow-xl">
+                    <div class="feature-icon w-20 h-20 bg-gradient-to-r from-primaryLight to-accent rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6 transition-all duration-700 hover:rotate-y-180">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Инноватсияҳои Экологӣ</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Экологические инновации</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Ecological innovations</h3>
+                    <p class="text-textLight mb-6" data-lang="tg">Таҳия ва татбиқи технологияҳои пешрафта барои рушди устувори кишвар</p>
+                    <p class="text-textLight mb-6" data-lang="ru">Разработка и внедрение передовых технологий для устойчивого развития страны</p>
+                    <p class="text-textLight mb-6" data-lang="en">Development and implementation of advanced technologies for sustainable development of the country</p>
+                    <a href="./inovatsia.html" class="btn border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold text-sm uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Маълумоти бештар</span>
+                        <span data-lang="ru">Подробнее</span>
+                        <span data-lang="en">Learn more</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="feature-card bg-white rounded-xl p-8 text-center shadow-lg border border-gray-100 transition-all duration-400 hover:-translate-y-3 hover:shadow-xl">
+                    <div class="feature-icon w-20 h-20 bg-gradient-to-r from-primaryLight to-accent rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6 transition-all duration-700 hover:rotate-y-180">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Таҳлили иқтисодӣ</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Экономический анализ</h3>
+                    <h3 class="text-xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Economic analysis</h3>
+                    <p class="text-textLight mb-6" data-lang="tg">Омӯзиши фоидаҳои иқтисодӣ ва иҷтимоии лоиҳаҳои нерӯи тоза</p>
+                    <p class="text-textLight mb-6" data-lang="ru">Изучение экономических и социальных выгод проектов чистой энергии</p>
+                    <p class="text-textLight mb-6" data-lang="en">Study of economic and social benefits of clean energy projects</p>
+                    <a href="./analysis.html" class="btn border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold text-sm uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-400 hover:bg-primary hover:text-white">
+                        <span data-lang="tg">Маълумоти бештар</span>
+                        <span data-lang="ru">Подробнее</span>
+                        <span data-lang="en">Learn more</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="py-20 bg-gradient-to-r from-primary/5 to-primaryDark/5" id="timeline">
+        <div class="container mx-auto px-4">
+            <div class="section-title text-center mb-16 relative">
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Рушди мо сол ба сол</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Наше развитие по годам</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Our year-by-year progress</h2>
+                <div class="divider w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded"></div>
+                <p class="max-w-2xl mx-auto" data-lang="tg">Таҳаввулот ва рушди мо аз соли 2021 то ҳол</p>
+                <p class="max-w-2xl mx-auto" data-lang="ru">Наша эволюция и развитие с 2021 года по настоящее время</p>
+                <p class="max-w-2xl mx-auto" data-lang="en">Our evolution and development from 2021 to present</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-container left">
+                    <div class="timeline-content shadow-md">
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="tg">2021 - Соли асосгузорӣ</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="ru">2021 - Год основания</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="en">2021 - Foundation year</h3>
+                        <p data-lang="tg">Таъсиси ташкилот ва иҷрои аввалин лоиҳаҳо дар ноҳияҳои ҷумҳурӣ</p>
+                        <p data-lang="ru">Создание организации и реализация первых проектов в районах республики</p>
+                        <p data-lang="en">Organization establishment and implementation of first projects in regions</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="tg">5 лоиҳа</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="ru">5 проектов</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="en">5 projects</span>
+                            <span class="bg-primary text-white text-xs px-3 py-1 rounded-full">10 MW</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-container right">
+                    <div class="timeline-content shadow-md">
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="tg">2022 - Рушди минтақавӣ</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="ru">2022 - Региональное развитие</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="en">2022 - Regional expansion</h3>
+                        <p data-lang="tg">Васеъ кардани фаъолият ба вилоятҳои Суғд ва Хатлон</p>
+                        <p data-lang="ru">Расширение деятельности в Согдийскую и Хатлонскую области</p>
+                        <p data-lang="en">Expanding activities to Sughd and Khatlon regions</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="tg">8 лоиҳа</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="ru">8 проектов</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="en">8 projects</span>
+                            <span class="bg-primary text-white text-xs px-3 py-1 rounded-full">15 MW</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-container left">
+                    <div class="timeline-content shadow-md">
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="tg">2023 - Илова кардани биогаз</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="ru">2023 - Добавление биогаза</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="en">2023 - Adding biogas</h3>
+                        <p data-lang="tg">Оғози лоиҳаҳои биогазӣ дар минтақаҳои кӯҳистонӣ</p>
+                        <p data-lang="ru">Запуск биогазовых проектов в горных районах</p>
+                        <p data-lang="en">Launch of biogas projects in mountainous areas</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="tg">12 лоиҳа</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="ru">12 проектов</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="en">12 projects</span>
+                            <span class="bg-primary text-white text-xs px-3 py-1 rounded-full">25 MW</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-container right">
+                    <div class="timeline-content shadow-md">
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="tg">2024 - Интишори миллиӣ</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="ru">2024 - Национальное распространение</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="en">2024 - National expansion</h3>
+                        <p data-lang="tg">Фаъолият дар ҳамаи вилоятҳо ва ноҳияҳои ҷумҳурӣ</p>
+                        <p data-lang="ru">Деятельность во всех областях и районах республики</p>
+                        <p data-lang="en">Operations in all regions and districts of the country</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="tg">20 лоиҳа</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="ru">20 проектов</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="en">20 projects</span>
+                            <span class="bg-primary text-white text-xs px-3 py-1 rounded-full">40 MW</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-container left">
+                    <div class="timeline-content shadow-md">
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="tg">2025 - Оғози кор дар хориҷа</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="ru">2025 - Начало работы за рубежом</h3>
+                        <h3 class="font-serif font-bold text-xl mb-3" data-lang="en">2025 - International expansion</h3>
+                        <p data-lang="tg">Иҷрои аввалин лоиҳаҳо дар Ӯзбекистон ва Афғонистон</p>
+                        <p data-lang="ru">Реализация первых проектов в Узбекистане и Афганистане</p>
+                        <p data-lang="en">Implementation of first projects in Uzbekistan and Afghanistan</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="tg">25+ лоиҳа</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="ru">25+ проектов</span>
+                            <span class="bg-accent text-white text-xs px-3 py-1 rounded-full" data-lang="en">25+ projects</span>
+                            <span class="bg-primary text-white text-xs px-3 py-1 rounded-full">50+ MW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="py-20" id="projects">
+        <div class="container mx-auto px-4">
+            <div class="section-title text-center mb-16 relative">
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Лоиҳаҳои охирин</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Последние проекты</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Recent projects</h2>
+                <div class="divider w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded"></div>
+                <p data-lang="tg">Таҳия ва татбиқи лоиҳаҳои мо дар саросари Тоҷикистон</p>
+                <p data-lang="ru">Разработка и реализация наших проектов по всему Таджикистану</p>
+                <p data-lang="en">Development and implementation of our projects across Tajikistan</p>
+            </div>
+            
+            <div class="projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="project-card rounded-xl overflow-hidden shadow-lg transition-all duration-400 hover:-translate-y-3 hover:shadow-xl bg-white">
+                    <div class="project-image h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="Solar Project" class="w-full h-full object-cover transition-all duration-400 hover:scale-110">
+                    </div>
+                    <div class="project-content p-6">
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="tg">Нерӯи офтобӣ</div>
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="ru">Солнечная энергия</div>
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="en">Solar power</div>
+                        
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="tg">Системаи фотоэлектрикии мактаби №45</h3>
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="ru">Фотоэлектрическая система школы №45</h3>
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="en">Photovoltaic system of school №45</h3>
+                        
+                        <p class="text-textLight mb-5" data-lang="tg">Насби системаи 50 кВт барои таъмини нерӯи мактаби миёнаи №45 дар ноҳияи Файзобод</p>
+                        <p class="text-textLight mb-5" data-lang="ru">Установка системы 50 кВт для энергоснабжения средней школы №45 в районе Файзобод</p>
+                        <p class="text-textLight mb-5" data-lang="en">Installation of 50 kW system for power supply of secondary school №45 in Fayzobod district</p>
+                        
+                        <div class="project-meta flex justify-between mt-6 pt-5 border-t border-gray-200 text-textLight text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="far fa-calendar"></i>
+                                <span>12.07.2023</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span data-lang="tg">Ноҳияи Файзобод</span>
+                                <span data-lang="ru">Район Файзобод</span>
+                                <span data-lang="en">Fayzobod district</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card rounded-xl overflow-hidden shadow-lg transition-all duration-400 hover:-translate-y-3 hover:shadow-xl bg-white">
+                    <div class="project-image h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="Wind Project" class="w-full h-full object-cover transition-all duration-400 hover:scale-110">
+                    </div>
+                    <div class="project-content p-6">
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="tg">Нерӯи бодӣ</div>
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="ru">Ветровая энергия</div>
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="en">Wind power</div>
+                        
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="tg">Турбинаҳои бодии ВМКБ "Памир-1"</h3>
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="ru">Ветровые турбины ВМКБ "Памир-1"</h3>
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="en">Wind turbines of GBAO "Pamir-1"</h3>
+                        
+                        <p class="text-textLight mb-5" data-lang="tg">Таҳия ва насби 5 турбинаи бодии 10 кВт дар ВМКБ "Памир-1" дар вилояти Кӯҳистони Бадахшон</p>
+                        <p class="text-textLight mb-5" data-lang="ru">Разработка и установка 5 ветровых турбин по 10 кВт в ГБАО "Памир-1"</p>
+                        <p class="text-textLight mb-5" data-lang="en">Development and installation of 5 wind turbines of 10 kW in GBAO "Pamir-1"</p>
+                        
+                        <div class="project-meta flex justify-between mt-6 pt-5 border-t border-gray-200 text-textLight text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="far fa-calendar"></i>
+                                <span>28.05.2023</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span data-lang="tg">Вилояти МВКБ</span>
+                                <span data-lang="ru">ГБАО</span>
+                                <span data-lang="en">GBAO</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card rounded-xl overflow-hidden shadow-lg transition-all duration-400 hover:-translate-y-3 hover:shadow-xl bg-white">
+                    <div class="project-image h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="Education Project" class="w-full h-full object-cover transition-all duration-400 hover:scale-110">
+                    </div>
+                    <div class="project-content p-6">
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="tg">Маълумотӣ</div>
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="ru">Образовательный</div>
+                        <div class="project-category bg-accent text-white text-xs px-4 py-1 rounded-full inline-block mb-4" data-lang="en">Educational</div>
+                        
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="tg">Лоиҳаи "Нерӯи тоза барои мактабҳо"</h3>
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="ru">Проект "Чистая энергия для школ"</h3>
+                        <h3 class="project-title text-xl font-serif font-bold text-primaryDark mb-4" data-lang="en">Project "Clean energy for schools"</h3>
+                        
+                        <p class="text-textLight mb-5" data-lang="tg">Таълими 1500 нафар хонанда дар 15 мактаби вилояти Суғд оид ба нерӯҳои тоза ва самаранокӣ</p>
+                        <p class="text-textLight mb-5" data-lang="ru">Обучение 1500 учащихся в 15 школах Согдийской области по чистой энергии и эффективности</p>
+                        <p class="text-textLight mb-5" data-lang="en">Training of 1500 students in 15 schools of Sughd region on clean energy and efficiency</p>
+                        
+                        <div class="project-meta flex justify-between mt-6 pt-5 border-t border-gray-200 text-textLight text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="far fa-calendar"></i>
+                                <span>15.04.2023</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span data-lang="tg">Вилояти Суғд</span>
+                                <span data-lang="ru">Согдийская область</span>
+                                <span data-lang="en">Sughd region</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="pb-20" id="map">
+        <div class="container mx-auto px-4">
+            <div class="section-title text-center mb-16 relative">
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="tg">Лоиҳаҳои мо дар харита</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="ru">Наши проекты на карте</h2>
+                <h2 class="text-4xl font-serif font-bold text-primaryDark mb-5" data-lang="en">Our projects on the map</h2>
+                <div class="divider w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded"></div>
+                <p data-lang="tg">Ҷойгиршавии лоиҳаҳои иҷрошудаи мо дар саросари Тоҷикистон</p>
+                <p data-lang="ru">Расположение наших реализованных проектов по всему Таджикистану</p>
+                <p data-lang="en">Location of our completed projects across Tajikistan</p>
+            </div>
+            
+            <div class="map-container rounded-xl overflow-hidden shadow-xl h-[500px]">
+                <div id="projectMap" class="w-full h-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-primaryDark to-primary text-white pt-20 pb-10" id="contact">
+        <div class="container mx-auto px-4">
+            <div class="footer-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div class="footer-col">
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="tg">Дар бораи мо</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="ru">О нас</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="en">About us</h4>
+                    
+                    <div class="footer-about">
+                        <p class="mb-6 leading-relaxed" data-lang="tg">"Неруи Сабз" - ташкилоти ғайридавлатӣ, ки ба рушди нерӯҳои тоза ва технологияҳои экологиявӣ дар Тоҷикистон машғул аст.</p>
+                        <p class="mb-6 leading-relaxed" data-lang="ru">"Зеленая Энергия" - неправительственная организация, занимающаяся развитием чистых энергий и экологических технологий в Таджикистане.</p>
+                        <p class="mb-6 leading-relaxed" data-lang="en">"Green Power" is a non-governmental organization engaged in the development of clean energy and environmental technologies in Tajikistan.</p>
+                        
+                        <p class="leading-relaxed" data-lang="tg">Мо барои офаридани ояндаи пойдор ва тоза кӯшиш мекунем.</p>
+                        <p class="leading-relaxed" data-lang="ru">Мы стремимся создать устойчивое и чистое будущее.</p>
+                        <p class="leading-relaxed" data-lang="en">We strive to create a sustainable and clean future.</p>
+                    </div>
+                    
+                    <div class="social-links flex gap-4 mt-8">
+                        <a href="#" class="w-12 h-12 bg-white bg-opacity-10 rounded-full flex items-center justify-center text-white text-lg transition-all duration-400 hover:bg-accent hover:-translate-y-1">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white bg-opacity-10 rounded-full flex items-center justify-center text-white text-lg transition-all duration-400 hover:bg-accent hover:-translate-y-1">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white bg-opacity-10 rounded-full flex items-center justify-center text-white text-lg transition-all duration-400 hover:bg-accent hover:-translate-y-1">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white bg-opacity-10 rounded-full flex items-center justify-center text-white text-lg transition-all duration-400 hover:bg-accent hover:-translate-y-1">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="tg">Пайвандҳо</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="ru">Ссылки</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="en">Links</h4>
+                    
+                    <ul class="footer-links space-y-4">
+                        <li>
+                            <a href="./about.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Дар бораи мо</span>
+                                <span data-lang="ru">О нас</span>
+                                <span data-lang="en">About us</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./services.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Хидматҳо</span>
+                                <span data-lang="ru">Услуги</span>
+                                <span data-lang="en">Services</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./projects.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Лоиҳаҳо</span>
+                                <span data-lang="ru">Проекты</span>
+                                <span data-lang="en">Projects</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./about.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Маълумотнома</span>
+                                <span data-lang="ru">Брошюра</span>
+                                <span data-lang="en">Brochure</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="tg">Хидматҳо</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="ru">Услуги</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="en">Services</h4>
+                    
+                    <ul class="footer-links space-y-4">
+                        <li>
+                            <a href="./oftob.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Нерӯи офтобӣ</span>
+                                <span data-lang="ru">Солнечная энергия</span>
+                                <span data-lang="en">Solar power</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./neru.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Биогаз</span>
+                                <span data-lang="ru">Биогаз</span>
+                                <span data-lang="en">Biogas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./oftob.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Самаранокии энергетикӣ</span>
+                                <span data-lang="ru">Энергетическая эффективность</span>
+                                <span data-lang="en">Energy efficiency</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./seminar.html" class="text-white text-opacity-80 no-underline transition-all duration-400 hover:text-accent hover:translate-x-2 flex items-center gap-3">
+                                <i class="fas fa-chevron-right text-accent"></i>
+                                <span data-lang="tg">Машваратҳо</span>
+                                <span data-lang="ru">Консультации</span>
+                                <span data-lang="en">Consultations</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="tg">Тамос</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="ru">Контакты</h4>
+                    <h4 class="text-xl font-serif font-bold mb-8 relative pb-3" data-lang="en">Contact</h4>
+                    
+                    <ul class="contact-info space-y-5">
+                        <li class="flex items-start gap-4">
+                            <i class="fas fa-map-marker-alt text-accent mt-1"></i>
+                            <span data-lang="tg">734025, Душанбе, кӯчаи Шерали Ҷӯраев 5</span>
+                            <span data-lang="ru">734025, Душанбе, ул. Шерали Джураева 5</span>
+                            <span data-lang="en">734025, Dushanbe, Sherali Juraev str. 5</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <i class="fas fa-phone-alt text-accent mt-1"></i>
+                            <span>+992 93 123 4567</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <i class="fas fa-envelope text-accent mt-1"></i>
+                            <span>info@nerui-sabz.tj</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <i class="fas fa-clock text-accent mt-1"></i>
+                            <span data-lang="tg">Душанбе-Ҷумъа: 8:00 - 18:00</span>
+                            <span data-lang="ru">Пн-Пт: 8:00 - 18:00</span>
+                            <span data-lang="en">Mon-Fri: 8:00 - 18:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom text-center pt-10 border-t border-white border-opacity-10 text-sm text-white text-opacity-80">
+                <p data-lang="tg">© 2023 "Неруи Сабз". Ҳама ҳуқуқҳо ҳифз шудаанд.</p>
+                <p data-lang="ru">© 2023 "Зеленая Энергия". Все права защищены.</p>
+                <p data-lang="en">© 2023 "Green Power". All rights reserved.</p>
+                
+                <p class="mt-2" data-lang="tg">Таҳиягар: Маркази технологияҳои пойдор</p>
+                <p class="mt-2" data-lang="ru">Разработчик: Центр устойчивых технологий</p>
+                <p class="mt-2" data-lang="en">Developer: Center for Sustainable Technologies</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Language switching functionality
+        const currentLangBtn = document.getElementById('currentLang');
+        const languageOptions = document.getElementById('languageOptions');
+        const langElements = document.querySelectorAll('[data-lang]');
+        
+        currentLangBtn.addEventListener('click', () => {
+            languageOptions.classList.toggle('show');
+        });
+        
+        document.querySelectorAll('.language-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const langCode = option.getAttribute('data-lang-code');
+                
+                // Hide all language elements
+                langElements.forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Show selected language elements
+                document.querySelectorAll(`[data-lang="${langCode}"]`).forEach(el => {
+                    el.style.display = 'block';
+                });
+                
+                // Update current language button
+                if (langCode === 'tg') currentLangBtn.textContent = 'TJ';
+                if (langCode === 'ru') currentLangBtn.textContent = 'RU';
+                if (langCode === 'en') currentLangBtn.textContent = 'EN';
+                
+                // Close dropdown
+                languageOptions.classList.remove('show');
+            });
+        });
+        
+        // Mobile Navigation
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        
+        // Header scroll effect
+        const header = document.getElementById('header');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    mobileToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+        
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('[data-count]');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-count');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target + '+';
+                }
+            });
+        }
+        
+        // Initialize map
+        const map = L.map('projectMap').setView([38.56, 71.00], 7);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Custom icons
+        const solarIcon = L.divIcon({
+            className: 'custom-icon',
+            html: '<div style="background-color: orange; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [20, 20]
+        });
+        
+        const windIcon = L.divIcon({
+            className: 'custom-icon',
+            html: '<div style="background-color: blue; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [20, 20]
+        });
+        
+        const eduIcon = L.divIcon({
+            className: 'custom-icon',
+            html: '<div style="background-color: green; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [20, 20]
+        });
+        
+        // Add project markers
+        const projects = [
+            {
+                name_tg: "Системаи фотоэлектрикии мактаби №45",
+                name_ru: "Фотоэлектрическая система школы №45",
+                name_en: "Photovoltaic system of school №45",
+                coords: [38.54, 69.00],
+                type: "solar",
+                date: "12.07.2023"
+            },
+            {
+                name_tg: "Турбинаҳои бодии ВМКБ 'Памир-1'",
+                name_ru: "Ветровые турбины ГБАО 'Памир-1'",
+                name_en: "Wind turbines of GBAO 'Pamir-1'",
+                coords: [37.50, 72.20],
+                type: "wind",
+                date: "28.05.2023"
+            },
+            {
+                name_tg: "Лоиҳаи 'Нерӯи тоза барои мактабҳо'",
+                name_ru: "Проект 'Чистая энергия для школ'",
+                name_en: "Project 'Clean energy for schools'",
+                coords: [39.90, 69.00],
+                type: "education",
+                date: "15.04.2023"
+            },
+            {
+                name_tg: "Системаи нерӯи офтобӣ барои клиника",
+                name_ru: "Солнечная энергосистема для клиники",
+                name_en: "Solar power system for clinic",
+                coords: [38.30, 69.40],
+                type: "solar",
+                date: "22.03.2023"
+            },
+            {
+                name_tg: "Турбинаҳои бодии ноҳияи Дарвоз",
+                name_ru: "Ветровые турбины района Дарвоз",
+                name_en: "Wind turbines of Darvoz district",
+                coords: [38.45, 70.80],
+                type: "wind",
+                date: "10.02.2023"
+            }
+        ];
+        
+        projects.forEach(project => {
+            let icon;
+            if (project.type === "solar") icon = solarIcon;
+            else if (project.type === "wind") icon = windIcon;
+            else icon = eduIcon;
+            
+            const marker = L.marker(project.coords, { icon }).addTo(map);
+            
+            marker.bindPopup(`
+                <b class="font-serif">${project.name_tg}</b><br>
+                <b class="font-serif">${project.name_ru}</b><br>
+                <b class="font-serif">${project.name_en}</b><br>
+                <div class="mt-2">
+                    <span class="text-sm" data-lang="tg">Навъи лоиҳа:</span>
+                    <span class="text-sm" data-lang="ru">Тип проекта:</span>
+                    <span class="text-sm" data-lang="en">Project type:</span>
+                    ${project.type === "solar" ? 
+                        '<span data-lang="tg">Нерӯи офтобӣ</span><span data-lang="ru">Солнечная энергия</span><span data-lang="en">Solar power</span>' : 
+                        project.type === "wind" ? 
+                        '<span data-lang="tg">Нерӯи бодӣ</span><span data-lang="ru">Ветровая энергия</span><span data-lang="en">Wind power</span>' : 
+                        '<span data-lang="tg">Маълумотӣ</span><span data-lang="ru">Образовательный</span><span data-lang="en">Educational</span>'}
+                </div>
+                <div class="mt-1">
+                    <i class="far fa-calendar text-xs"></i>
+                    <span class="text-xs">${project.date}</span>
+                </div>
+            `);
+        });
+        
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Feature cards animation
+        gsap.utils.toArray('.feature-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                delay: i * 0.1,
+                ease: "power2.out"
+            });
+        });
+        
+        // Timeline animation
+        gsap.utils.toArray('.timeline-container').forEach((container, i) => {
+            gsap.from(container, {
+                scrollTrigger: {
+                    trigger: container,
+                    start: "top 90%",
+                    toggleActions: "play none none none"
+                },
+                x: i % 2 === 0 ? -100 : 100,
+                opacity: 0,
+                duration: 1,
+                delay: i * 0.2,
+                ease: "back.out(1.7)"
+            });
+        });
+        
+        // Project cards animation
+        gsap.utils.toArray('.project-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 90%",
+                    toggleActions: "play none none none"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                delay: i * 0.15,
+                ease: "power2.out"
+            });
+        });
+        
+        // Map animation
+        gsap.from('#projectMap', {
+            scrollTrigger: {
+                trigger: '#projectMap',
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            scale: 0.9,
+            duration: 1.5,
+            ease: "power2.out"
+        });
+        
+        // Start counter animation when timeline section is in view
+        ScrollTrigger.create({
+            trigger: "#timeline",
+            start: "top 70%",
+            onEnter: animateCounters
+        });
+        
+        // Copy protection
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'C') || 
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
